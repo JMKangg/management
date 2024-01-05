@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- EMERGENCY STOP 버튼 -->
+    <Button
+        android:id="@+id/btnEmergencyStop"
+        android:layout_width="170dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        android:text="Emergency\nstop"
+        android:backgroundTint="@color/red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- 4x2 행렬의 8개의 직사각형 버튼 -->
+    <Button
+        android:id="@+id/btnstart"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="START"
+        app:layout_constraintEnd_toStartOf="@id/btnsafetycheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnEmergencyStop"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/btnsafetycheck"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="SAFETY CHECK"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnstart"
+        app:layout_constraintTop_toBottomOf="@id/btnEmergencyStop"
+        android:layout_marginTop="50dp"/>
+
+    <Button
+        android:id="@+id/btnlearning"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="LEARNING"
+        app:layout_constraintEnd_toStartOf="@id/btnsafetycheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnstart"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:id="@+id/btnlearningsave"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="LEARNING SAVE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnstart"
+        app:layout_constraintTop_toBottomOf="@id/btnstart"
+        android:layout_marginTop="40dp"/>
+
+    <Button
+        android:id="@+id/btndrive"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="DRIVE"
+        app:layout_constraintEnd_toStartOf="@id/btnsafetycheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnlearning"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:id="@+id/btnanalysis"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="ANALYSIS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnstart"
+        app:layout_constraintTop_toBottomOf="@id/btnlearningsave"
+        android:layout_marginTop="40dp"/>
+
+    <Button
+        android:id="@+id/btnreport"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="REPORT"
+        app:layout_constraintEnd_toStartOf="@id/btnsafetycheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btndrive"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:id="@+id/btnstop"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:text="STOP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnstart"
+        app:layout_constraintTop_toBottomOf="@id/btnanalysis"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:id="@+id/number"
+        app:layout_constraintTop_toBottomOf="@id/btnreport"
+        android:text="number"
+        android:gravity="center"
+        android:layout_marginTop="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
