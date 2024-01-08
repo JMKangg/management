@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,21 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <!-- EMERGENCY STOP 버튼 -->
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnEmergencyStop"
         android:layout_width="170dp"
         android:layout_height="150dp"
         android:layout_marginTop="30dp"
         android:text="Emergency\nstop"
-        android:backgroundTint="@color/red"
+        app:buttonColor="@color/fbutton_color_alizarin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- 4x2 행렬의 8개의 직사각형 버튼 -->
-    <Button
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnstart"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="START"
@@ -29,8 +33,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnEmergencyStop"
         android:layout_marginTop="50dp" />
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnsafetycheck"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="SAFETY CHECK"
@@ -39,8 +44,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnEmergencyStop"
         android:layout_marginTop="50dp"/>
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnlearning"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="LEARNING"
@@ -49,8 +55,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnstart"
         android:layout_marginTop="40dp" />
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnlearningsave"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="LEARNING SAVE"
@@ -59,8 +66,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnstart"
         android:layout_marginTop="40dp"/>
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btndrive"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="DRIVE"
@@ -69,8 +77,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnlearning"
         android:layout_marginTop="40dp" />
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnanalysis"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="ANALYSIS"
@@ -79,8 +88,9 @@
         app:layout_constraintTop_toBottomOf="@id/btnlearningsave"
         android:layout_marginTop="40dp"/>
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnreport"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="REPORT"
@@ -89,8 +99,9 @@
         app:layout_constraintTop_toBottomOf="@id/btndrive"
         android:layout_marginTop="40dp" />
 
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnstop"
+        app:buttonColor="@color/fbutton_color_silver"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:text="STOP"

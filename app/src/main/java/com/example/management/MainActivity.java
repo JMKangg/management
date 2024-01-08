@@ -1,12 +1,17 @@
 package com.example.management;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,7 +24,7 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnStart;
+    private FButton btnStart;
     private Button btnSafetyCheck;
     private Button btnLearning;
     private Button btnLearningSave;
@@ -46,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnStart = findViewById(R.id.btnstart);
+        btnStart = (FButton) findViewById(R.id.btnstart);
         btnSafetyCheck = findViewById(R.id.btnsafetycheck);
         btnLearning = findViewById(R.id.btnlearning);
         btnLearningSave = findViewById(R.id.btnlearningsave);
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showOptionDialog_start();
+                /*
                 //button 액션
                 setButtonsEnabled(true,false,false,false,false,false,false,false);
 
@@ -70,12 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnSafetyCheck, 2000);
                 //navigateToButton(btnSafetyCheck);
+
+                 */
             }
         });
 
         btnSafetyCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,true,false,false,false,false,false,false);
 
@@ -85,12 +95,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnLearning, 2000);
                 //navigateToButton(btnLearning);
+
+                 */
             }
         });
 
         btnLearning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,false,true,false,false,false,false,false);
 
@@ -100,12 +113,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnLearningSave, 2000);
                 //navigateToButton(btnLearningSave);
+
+                 */
             }
         });
 
         btnLearningSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,false,false,true,false,false,false,false);
 
@@ -115,12 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnDrive, 2000);
                 //navigateToButton(btnDrive);
+
+                 */
             }
         });
 
         btnDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,false,false,false,true,false,false,false);
 
@@ -130,12 +149,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnAnalysis, 2000);
                 //navigateToButton(btnAnalysis);
+
+                 */
             }
         });
 
         btnAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,false,false,false,false,true,false,false);
 
@@ -145,12 +167,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnReport, 2000);
                 //navigateToButton(btnReport);
+
+                 */
             }
         });
 
         btnReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //button 액션
                 setButtonsEnabled(false,false,false,false,false,false,true,false);
 
@@ -160,12 +185,15 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(String.valueOf(count));
                 navigateToButtonDelayed(btnStop, 2000);
                 //navigateToButton(btnStop);
+
+                 */
             }
         });
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //button 액션
                 setButtonsEnabled(false,false,false,false,false,false,false,true);
 
@@ -192,6 +220,34 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void showOptionDialog_start() {
+        PopupMenu popupMenu = new PopupMenu(this, btnStart);
+        popupMenu.getMenu().add("Option 1");
+        popupMenu.getMenu().add("Option 2");
+        // 원하는 만큼의 옵션 추가
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                String option = item.getTitle().toString();
+                // 각 옵션을 클릭했을 때의 동작을 여기에 정의
+                switch (option) {
+                    case "Option 1":
+                        // Option 1 선택 시 동작
+                        return true;
+                    case "Option 2":
+                        // Option 2 선택 시 동작
+                        return true;
+                    // 추가적인 옵션에 대한 처리 추가
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popupMenu.show();
     }
 
     //button 초기화함수
