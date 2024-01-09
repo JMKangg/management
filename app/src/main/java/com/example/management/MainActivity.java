@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -23,18 +26,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
-
+    //버튼액션정의
     private FButton btnStart;
-    private Button btnSafetyCheck;
-    private Button btnLearning;
-    private Button btnLearningSave;
-    private Button btnDrive;
-    private Button btnAnalysis;
-    private Button btnReport;
-    private Button btnStop;
-    private Button btnEmergencyStop;
+    private FButton btnSafetyCheck;
+    private FButton btnLearning;
+    private FButton btnLearningSave;
+    private FButton btnDrive;
+    private FButton btnAnalysis;
+    private FButton btnReport;
+    private FButton btnStop;
+    private FButton btnEmergencyStop;
     private TextView textView;
     private  int count = 0;
+
+    //ip통신정의
+    EditText editTextAddress, editTextPort;
+    Button buttonConnect,buttonInitial,buttonDisconnect;
+    TextView textViewState, textViewRx;
+    ClientHandler clientHandler;
+    ClientThread clientThread;
 
     private void navigateToButtonDelayed(final Button button, int delayInMillis) {
         new Handler().postDelayed(new Runnable() {
@@ -50,22 +60,44 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        btnStart = (FButton) findViewById(R.id.btnstart);
-        btnSafetyCheck = findViewById(R.id.btnsafetycheck);
-        btnLearning = findViewById(R.id.btnlearning);
-        btnLearningSave = findViewById(R.id.btnlearningsave);
-        btnDrive = findViewById(R.id.btndrive);
-        btnAnalysis = findViewById(R.id.btnanalysis);
-        btnReport = findViewById(R.id.btnreport);
-        btnStop = findViewById(R.id.btnstop);
-        btnEmergencyStop = findViewById(R.id.btnEmergencyStop);
+        //버튼동작
+        btnStart = (com.example.management.FButton) findViewById(R.id.btnstart);
+        btnSafetyCheck = (com.example.management.FButton) findViewById(R.id.btnsafetycheck);
+        btnLearning = (com.example.management.FButton) findViewById(R.id.btnlearning);
+        btnLearningSave = (com.example.management.FButton) findViewById(R.id.btnlearningsave);
+        btnDrive = (com.example.management.FButton) findViewById(R.id.btndrive);
+        btnAnalysis = (com.example.management.FButton) findViewById(R.id.btnanalysis);
+        btnReport = (com.example.management.FButton) findViewById(R.id.btnreport);
+        btnStop = (com.example.management.FButton) findViewById(R.id.btnstop);
+        btnEmergencyStop = (com.example.management.FButton) findViewById(R.id.btnEmergencyStop);
         textView = findViewById(R.id.number);
+        //ip통신
+        editTextAddress = (EditText) findViewById(R.id.address);
+        editTextPort = (EditText) findViewById(R.id.port);
+        textViewState = (TextView)findViewById(R.id.state);
+        textViewRx = (TextView)findViewById(R.id.received);
+        buttonInitial = (Button)findViewById(R.id.initial);
+        buttonConnect = (Button) findViewById(R.id.connect);
+        buttonDisconnect = (Button) findViewById(R.id.disconnect);
 
+        buttonDisconnect.setEnabled(false);
+        buttonInitial.setEnabled(false);
 
+        buttonConnect.setOnClickListener(buttonConnectOnClickListener);
+        buttonDisconnect.setOnClickListener(buttonDisConnectOnClickListener);
+        buttonInitial.setOnClickListener(buttonInitialOnClickListener);
+
+        clientHandler = new ClientHandler(this);
+
+        //버튼액션
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(clientThread != null){
+                    String msgToSend = "start";
+                    clientThread.txMsg(msgToSend);
+
+                }
                 showOptionDialog_start();
                 /*
                 //button 액션
@@ -202,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 readCountFromFile(R.raw.count_zero);
                 textView.setText(String.valueOf(count));
 
-                 //button 액션 초기화
+                //button 액션 초기화
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -222,6 +254,99 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //ip통신
+    View.OnClickListener buttonConnectOnClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View arg0) {
+
+            clientThread = new ClientThread(
+                    editTextAddress.getText().toString(),
+                    Integer.parseInt(editTextPort.getText().toString()),
+                    new ClientHandler(MainActivity.this));
+            clientThread.setParent(MainActivity.this);
+            clientThread.start();
+
+            buttonConnect.setEnabled(false);
+            buttonInitial.setEnabled(true);
+        }
+    };
+
+    View.OnClickListener buttonInitialOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(clientThread != null){
+                String msgToSend = "initial";
+                clientThread.txMsg(msgToSend);
+
+            }
+        }
+    };
+
+    View.OnClickListener buttonDisConnectOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(clientThread != null){
+                clientThread.setRunning(false);
+            }
+        }
+    };
+
+    //ip통신
+    private void updateState(String state){
+        textViewState.setText(state);
+    }
+
+    public void updateRxMsg(String rxmsg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewRx.append(rxmsg + "\n");
+            }
+        });
+    }
+
+    private void clientEnd(){
+        clientThread = null;
+        textViewState.setText("clientEnd()");
+        buttonConnect.setEnabled(true);
+        buttonInitial.setEnabled(false);
+
+    }
+
+    public static class ClientHandler extends Handler {
+        public static final int UPDATE_STATE = 0;
+        public static final int UPDATE_MSG = 1;
+        public static final int UPDATE_END = 2;
+        private MainActivity parent;
+
+        public ClientHandler(MainActivity parent) {
+            super(Looper.getMainLooper());
+            this.parent = parent;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what){
+                case UPDATE_STATE:
+                    parent.updateState((String)msg.obj);
+                    break;
+                case UPDATE_MSG:
+                    parent.updateRxMsg((String)msg.obj);
+                    break;
+                case UPDATE_END:
+                    parent.clientEnd();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+
+        }
+
+    }
+
+    //버튼액션
     private void showOptionDialog_start() {
         PopupMenu popupMenu = new PopupMenu(this, btnStart);
         popupMenu.getMenu().add("Option 1");
