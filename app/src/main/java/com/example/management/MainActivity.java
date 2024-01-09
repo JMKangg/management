@@ -1,20 +1,18 @@
 package com.example.management;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
+
     //버튼액션정의
     private FButton btnStart;
     private FButton btnSafetyCheck;
@@ -59,7 +58,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        //int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        //getWindow().getDecorView().setSystemUiVisibility(flags);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+
         //버튼동작
         btnStart = (com.example.management.FButton) findViewById(R.id.btnstart);
         btnSafetyCheck = (com.example.management.FButton) findViewById(R.id.btnsafetycheck);
@@ -98,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
                     clientThread.txMsg(msgToSend);
 
                 }
-                showOptionDialog_start();
+
+                //showCustomPopupMenu(btnStart);
+                //showOptionDialog_start();
+
                 /*
                 //button 액션
                 setButtonsEnabled(true,false,false,false,false,false,false,false);
@@ -117,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         btnSafetyCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 /*
                 //button 액션
                 setButtonsEnabled(false,true,false,false,false,false,false,false);
@@ -135,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         btnLearning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showCustomPopupMenu(btnLearning);
                 /*
                 //button 액션
                 setButtonsEnabled(false,false,true,false,false,false,false,false);
@@ -268,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
             clientThread.start();
 
             buttonConnect.setEnabled(false);
+            buttonDisconnect.setEnabled(true);
             buttonInitial.setEnabled(true);
         }
     };
@@ -345,17 +356,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    /*
     //버튼액션
     private void showOptionDialog_start() {
-        PopupMenu popupMenu = new PopupMenu(this, btnStart);
-        popupMenu.getMenu().add("Option 1");
-        popupMenu.getMenu().add("Option 2");
+        //Context context = new ContextThemeWrapper(this, R.style.PopupMenuFontStyle);
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), btnStart);
+        getMenuInflater().inflate(R.menu.popup,popupMenu.getMenu());
+        //popupMenu.getMenu().add("Option 1");
+        //popupMenu.getMenu().add("Option 2");
         // 원하는 만큼의 옵션 추가
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_menu1){
+                    // Option 1 선택 시 동작
+                }else if (item.getItemId() == R.id.action_menu2){
+                    // Option 2 선택 시 동작
+                }else {
+                    // ... Toast.makeText(MainActivity.this, "메뉴 3 클릭", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+
+
                 String option = item.getTitle().toString();
                 // 각 옵션을 클릭했을 때의 동작을 여기에 정의
                 switch (option) {
@@ -369,10 +393,49 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         return false;
                 }
+
+
+            }
+        });
+        popupMenu.show();
+    }
+    */
+
+    private void showCustomPopupMenu(View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup, null);
+
+        // 팝업 윈도우 생성
+        PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+        );
+        // 팝업 외부를 터치하면 닫히도록 설정
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        // 팝업 내부의 TextView 등의 요소에 대한 조작 가능
+        TextView option1 = popupView.findViewById(R.id.option1);
+        TextView option2 = popupView.findViewById(R.id.option2);
+        // 여기서 TextView 등을 찾고 setTextSize 등을 통해 크기를 조절 가능
+
+        // 팝업 표시 위치 설정
+        popupWindow.showAsDropDown(view, 10, 0); // 원하는 위치로 조정 *dp기준임
+
+        // 팝업 윈도우 내의 요소에 대한 클릭 리스너 등록
+        option1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Option 1 선택 시 동작
             }
         });
 
-        popupMenu.show();
+        option2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Option 2 선택 시 동작
+            }
+        });
     }
 
     //button 초기화함수
