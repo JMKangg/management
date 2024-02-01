@@ -1,5 +1,6 @@
 package com.example.management;
 
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //ip통신정의
     EditText editTextAddress, editTextPort;
     Button buttonConnect,buttonInitial,buttonDisconnect;
-    TextView textViewState, textViewRx;
+    TextView textViewState, textViewRx, textalert;
     ClientHandler clientHandler;
     ClientThread clientThread;
 
@@ -81,12 +82,21 @@ public class MainActivity extends AppCompatActivity {
         editTextPort = (EditText) findViewById(R.id.port);
         textViewState = (TextView)findViewById(R.id.state);
         textViewRx = (TextView)findViewById(R.id.received);
+        textalert = (TextView)findViewById(R.id.alert);
         buttonInitial = (Button)findViewById(R.id.initial);
         buttonConnect = (Button) findViewById(R.id.connect);
         buttonDisconnect = (Button) findViewById(R.id.disconnect);
 
         buttonDisconnect.setEnabled(false);
         buttonInitial.setEnabled(false);
+        btnStart.setEnabled(false);
+        btnSafetyCheck.setEnabled(false);
+        btnLearning.setEnabled(false);
+        btnLearningSave.setEnabled(false);
+        btnDrive.setEnabled(false);
+        btnAnalysis.setEnabled(false);
+        btnReport.setEnabled(false);
+        btnStop.setEnabled(false);
 
         buttonConnect.setOnClickListener(buttonConnectOnClickListener);
         buttonDisconnect.setOnClickListener(buttonDisConnectOnClickListener);
@@ -280,6 +290,15 @@ public class MainActivity extends AppCompatActivity {
             buttonConnect.setEnabled(false);
             buttonDisconnect.setEnabled(true);
             buttonInitial.setEnabled(true);
+
+            btnStart.setEnabled(false);
+            btnSafetyCheck.setEnabled(false);
+            btnLearning.setEnabled(false);
+            btnLearningSave.setEnabled(false);
+            btnDrive.setEnabled(false);
+            btnAnalysis.setEnabled(false);
+            btnReport.setEnabled(false);
+            btnStop.setEnabled(false);
         }
     };
 
@@ -287,10 +306,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(clientThread != null){
-                String msgToSend = "initial";
+                String msgToSend = "distance";
                 clientThread.txMsg(msgToSend);
 
             }
+            btnStart.setEnabled(true);
+            btnSafetyCheck.setEnabled(true);
+            btnLearning.setEnabled(true);
+            btnLearningSave.setEnabled(true);
+            btnDrive.setEnabled(true);
+            btnAnalysis.setEnabled(true);
+            btnReport.setEnabled(true);
+            btnStop.setEnabled(true);
         }
     };
 
@@ -298,7 +325,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(clientThread != null){
+               // String msgToSend = "disconnect";
+                //clientThread.txMsg(msgToSend);
                 clientThread.setRunning(false);
+
             }
         }
     };
@@ -312,7 +342,15 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textViewRx.append(rxmsg + "\n");
+                textViewRx.setText(rxmsg + "\n");
+
+                if (rxmsg.trim().equals("0")) {
+                    textalert.setText("The location is accurate.");
+                    textalert.setTextColor(Color.BLUE);
+                } else if(rxmsg.trim().equals("1")) {
+                    textalert.setText("Move the object location forward");
+                    textalert.setTextColor(Color.RED);
+                }
             }
         });
     }
@@ -322,6 +360,14 @@ public class MainActivity extends AppCompatActivity {
         textViewState.setText("clientEnd()");
         buttonConnect.setEnabled(true);
         buttonInitial.setEnabled(false);
+        btnStart.setEnabled(false);
+        btnSafetyCheck.setEnabled(false);
+        btnLearning.setEnabled(false);
+        btnLearningSave.setEnabled(false);
+        btnDrive.setEnabled(false);
+        btnAnalysis.setEnabled(false);
+        btnReport.setEnabled(false);
+        btnStop.setEnabled(false);
 
     }
 
